@@ -47,7 +47,6 @@ class Home : Fragment() {
             val intent = Intent(activity, Level1Activity::class.java)
             startActivity(intent)
         }
-
         return view
 
         // Inflate the layout for this fragment
