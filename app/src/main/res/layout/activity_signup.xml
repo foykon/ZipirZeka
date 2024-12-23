@@ -28,7 +28,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Login"
+                android:text="SIGN UP"
                 android:id="@+id/loginText"
                 android:textSize="36sp"
                 android:textAlignment="center"
@@ -58,23 +58,24 @@
                 android:hint="Password"
                 android:drawableLeft="@drawable/ic_baseline_lock_24"
                 android:textColor="@color/black"
-                android:drawablePadding="8dp" />
+                android:drawablePadding="8dp"/>
+
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="Login"
-                android:id="@+id/loginButton"
+                android:text="Sign Up"
+                android:id="@+id/signButton"
                 android:textSize="18sp"
                 android:layout_marginTop="30dp"
                 android:backgroundTint="@color/purple"
                 app:cornerRadius = "20dp"/>
 
             <TextView
-                android:id="@+id/signupRedirect"
+                android:id="@+id/loginRedirect"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Not yet registered ? Sign Up"
+                android:text="Already Registered? Login"
                 android:textSize="18sp"
                 android:gravity="center"
                 android:textColor="@color/purple"
