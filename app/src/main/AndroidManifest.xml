@@ -20,6 +20,9 @@
             android:name=".loginpage.login"
             android:exported="false" />
         <activity
+            android:name=".loginpage.SignupActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="Dictionary">

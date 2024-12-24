@@ -129,8 +129,10 @@ class QuizActivity : AppCompatActivity() , View.OnClickListener{
                     val question = mQuestionList?.get(mCurrentPosition - 1)
                     if (question!!.correctOption != mSelectedOptionPosition) {
                         answerView(mSelectedOptionPosition, R.drawable.wrong_option_border_bg)
+                    }else{
+                        answerView(question.correctOption, R.drawable.correct_option_border_bg)
                     }
-                    answerView(question.correctOption, R.drawable.correct_option_border_bg)
+
                     if (mCurrentPosition == mQuestionList!!.size) {
                         btnSubmit.text = "Finish"
                     } else {
