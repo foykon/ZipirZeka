@@ -6,5 +6,11 @@
     <color name="background">#3b1e54</color>
     <color name="text">#d4bee4</color>
     <color name="purple">#8692f7</color>
+    <color name="navyBlue">#323b60</color>
+    <color name="pink">#e05d5c</color>
+    <color name="colorPrimary">#3C0072</color>
+    <color name="colorPrimaryDark">#300B51</color>
+    <color name="colorAccent">#FF006E</color>
+    <color name="colorBackground">#FFC4DD</color>
 
 </resources>
