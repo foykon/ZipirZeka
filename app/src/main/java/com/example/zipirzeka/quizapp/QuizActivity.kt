@@ -109,6 +109,7 @@ class QuizActivity : AppCompatActivity() , View.OnClickListener{
                 selectedOptionView(tvOptionFour, 4)
             }
             R.id.btn_submit -> {
+
                 if (mSelectedOptionPosition == 0) {
                     mCurrentPosition++
 
