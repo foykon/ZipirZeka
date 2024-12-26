@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.example.zipirzeka.LevelPages.Level1Activity
+import com.example.zipirzeka.level2.Level2
 import com.example.zipirzeka.quizapp.QuizActivity
 
 // TODO: Rename parameter arguments, choose names that match
@@ -54,6 +55,14 @@ class Home : Fragment() {
         // Butona tıklama olayı ekle
         btnNavigate2.setOnClickListener {
             val intent = Intent(activity, QuizActivity::class.java)
+            startActivity(intent)
+        }
+        // Buton referansı al
+        val btnNavigate3 = view.findViewById<Button>(R.id.level3)
+
+        // Butona tıklama olayı ekle
+        btnNavigate3.setOnClickListener {
+            val intent = Intent(activity, Level2::class.java)
             startActivity(intent)
         }
         return view
