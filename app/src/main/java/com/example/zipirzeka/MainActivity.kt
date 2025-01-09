@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.zipirzeka.PopUp.checkOverlayPermission
+import com.example.zipirzeka.PopUp.scheduleOverlayUsingWorkManager
 import com.example.zipirzeka.loginpage.login
 import com.example.zipirzeka.databinding.ActivityMainBinding
 
@@ -12,6 +14,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         // Kullanıcının giriş durumunu kontrol edin
         val sharedPreferences = getSharedPreferences("UserPref", MODE_PRIVATE)
@@ -21,10 +24,13 @@ class MainActivity : AppCompatActivity() {
             // Kullanıcı giriş yapmamışsa login ekranına yönlendirin
             val intent = Intent(this, login::class.java)
             startActivity(intent)
-
         }
         binding = ActivityMainBinding.inflate(layoutInflater)
-            setContentView(binding.root)
+        setContentView(binding.root)
+
+        checkOverlayPermission(this)  // applicationContext yerine this
+        scheduleOverlayUsingWorkManager(this)
+
             replaceFragment(Home())
             binding.bottomNavigationView.setOnItemSelectedListener {
                 when (it.itemId) {
@@ -41,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 true
             }
-        }
+    }
 
         private fun replaceFragment(fragment: Fragment) {
             val fragmentManager = supportFragmentManager
@@ -49,4 +55,5 @@ class MainActivity : AppCompatActivity() {
             fragmentTransaction.replace(R.id.frame_layout, fragment)
             fragmentTransaction.commit()
         }
-    }
+
+}
