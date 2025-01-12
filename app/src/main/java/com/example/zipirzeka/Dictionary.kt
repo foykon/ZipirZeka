@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import android.provider.MediaStore
 import android.widget.GridLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -26,18 +27,16 @@ import java.util.*
 class Dictionary : Fragment() {
     private val PERMISSION_CODE = 1000
     private val IMAGE_CAPTURE_CODE = 1001
-
+    private lateinit var photoLayout: GridLayout
     var vFilename: String = ""
-    private lateinit var photoLayout: GridLayout // Fotoğrafları ekleyeceğimiz layout
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_dictionary, container, false)
-
-        // Fotoğraf göstermek için LinearLayout
         photoLayout = view.findViewById(R.id.photoLayout)
+
+        // Uygulama başlatıldığında veritabanındaki fotoğrafları yükle
+        loadPhotosFromDatabase()
 
         val btnTakePhoto: View = view.findViewById(R.id.btn_takephoto)
         btnTakePhoto.setOnClickListener {
@@ -73,30 +72,18 @@ class Dictionary : Fragment() {
     }
 
     private fun checkPermissions(): Boolean {
-        val cameraPermission = ContextCompat.checkSelfPermission(
-            requireContext(), Manifest.permission.CAMERA
-        )
+        val cameraPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
         return cameraPermission == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestPermissions() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(
-                requireActivity(), Manifest.permission.CAMERA
-            )) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA)) {
             Toast.makeText(requireContext(), "Camera permission is required to take photos", Toast.LENGTH_LONG).show()
         }
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(Manifest.permission.CAMERA),
-            PERMISSION_CODE
-        )
+        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.CAMERA), PERMISSION_CODE)
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -118,7 +105,7 @@ class Dictionary : Fragment() {
             val layoutParams = GridLayout.LayoutParams()
             layoutParams.width = 0
             layoutParams.height = GridLayout.LayoutParams.WRAP_CONTENT
-            layoutParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f) // Her sütun eşit genişlikte
+            layoutParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
             layoutParams.rowSpec = GridLayout.spec(GridLayout.UNDEFINED)
             layoutParams.setMargins(8, 8, 8, 8)
 
@@ -129,9 +116,33 @@ class Dictionary : Fragment() {
             // Fotoğrafı 'photoLayout' içerisine ekle
             photoLayout.addView(imageView)
 
+            // Fotoğraf yolunu veritabanına kaydet
+            val dbHelper = DatabaseHelper(requireContext())
+            dbHelper.insertUserPhoto(file.absolutePath)
+
             Toast.makeText(requireContext(), "Image saved to: ${file.absolutePath}", Toast.LENGTH_LONG).show()
         }
     }
 
+    private fun loadPhotosFromDatabase() {
+        val dbHelper = DatabaseHelper(requireContext())
+        val photoPaths = dbHelper.getAllPhotos()
 
+        for (photoPath in photoPaths) {
+            val imageView = ImageView(requireContext())
+            val layoutParams = GridLayout.LayoutParams()
+            layoutParams.width = 0
+            layoutParams.height = GridLayout.LayoutParams.WRAP_CONTENT
+            layoutParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+            layoutParams.rowSpec = GridLayout.spec(GridLayout.UNDEFINED)
+            layoutParams.setMargins(8, 8, 8, 8)
+
+            imageView.layoutParams = layoutParams
+            imageView.adjustViewBounds = true
+            imageView.setImageURI(File(photoPath).toUri())
+
+            // Fotoğrafı 'photoLayout' içerisine ekle
+            photoLayout.addView(imageView)
+        }
+    }
 }

@@ -23,7 +23,12 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
 
+var isOverlayVisible = false
+
 fun showOverlay(context: Context) {
+    // Eğer overlay zaten gösteriliyorsa, hiçbir şey yapma
+    if (isOverlayVisible) return
+
     // UI thread'inde çalıştırmak için Handler
     Handler(Looper.getMainLooper()).post {
         val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -43,34 +48,43 @@ fun showOverlay(context: Context) {
 
         // WindowManager'a overlay'yi ekle
         windowManager.addView(overlayLayout, layoutParams)
+        isOverlayVisible = true  // Overlay gösteriliyor, flag'i güncelle
+
         val questionImage = overlayLayout.findViewById<ImageView>(R.id.overlay_question)
         questionImage.setImageResource(R.drawable.cat)
-
 
         val option1 = overlayLayout.findViewById<Button>(R.id.option1_button)
         option1.setOnClickListener {
             windowManager.removeView(overlayLayout)
+            isOverlayVisible = false  // Overlay kapandı, flag'i sıfırla
+            scheduleOverlayUsingWorkManager(context)  // Overlay kapanınca tekrar planla
         }
         val option2 = overlayLayout.findViewById<Button>(R.id.option2_button)
         option2.setOnClickListener {
             windowManager.removeView(overlayLayout)
+            isOverlayVisible = false  // Overlay kapandı, flag'i sıfırla
+            scheduleOverlayUsingWorkManager(context)  // Overlay kapanınca tekrar planla
         }
         val option3 = overlayLayout.findViewById<Button>(R.id.option3_button)
         option3.setOnClickListener {
             windowManager.removeView(overlayLayout)
+            isOverlayVisible = false  // Overlay kapandı, flag'i sıfırla
+            scheduleOverlayUsingWorkManager(context)  // Overlay kapanınca tekrar planla
         }
         val option4 = overlayLayout.findViewById<Button>(R.id.option4_button)
         option4.setOnClickListener {
             windowManager.removeView(overlayLayout)
+            isOverlayVisible = false  // Overlay kapandı, flag'i sıfırla
+            scheduleOverlayUsingWorkManager(context)  // Overlay kapanınca tekrar planla
         }
-
-
     }
 }
+
+
 fun scheduleOverlayUsingWorkManager(context: Context) {
     // Worker'ı her 30 saniyede bir çalışacak şekilde planla
-    val workRequest = PeriodicWorkRequestBuilder<OverlayWorker>(5, TimeUnit.SECONDS)
-        .setInitialDelay(5, TimeUnit.SECONDS) // İlk alarmın 30 saniye sonra tetiklenmesini sağla
+    val workRequest = PeriodicWorkRequestBuilder<OverlayWorker>(60, TimeUnit.SECONDS)
+        .setInitialDelay(60, TimeUnit.SECONDS) // İlk alarmın 30 saniye sonra tetiklenmesini sağla
         .build()
 
     // WorkManager ile işi kuyruğa al
